@@ -4,6 +4,7 @@ import {
     getSnippetLanguageName,
 } from '@/Support/snippetLanguage'
 import { getSnippetTagLabel } from '@/Support/snippetTags'
+import Pagination from '@/Components/Pagination'
 
 export default function MySnippetsPanel({
     snippets = [],
@@ -11,6 +12,7 @@ export default function MySnippetsPanel({
     onSnippetClick = () => {},
     onEditClick = () => {},
     onDeleteClick = () => {},
+    pagination,
 }) {
     return (
         <div className="space-y-8">
@@ -60,6 +62,8 @@ export default function MySnippetsPanel({
                     ))}
                 </div>
             )}
+
+            <Pagination pagination={pagination} />
         </div>
     )
 }
