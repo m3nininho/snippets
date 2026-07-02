@@ -3,6 +3,7 @@ import {
     getSnippetLanguageColor,
     getSnippetLanguageName,
 } from '@/Support/snippetLanguage'
+import { getSnippetTagLabel } from '@/Support/snippetTags'
 
 export default function SnippetCard({snippet, onClick = () => {}, active = false}) {
     return (
@@ -50,14 +51,18 @@ export default function SnippetCard({snippet, onClick = () => {}, active = false
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
-                {(snippet.tags ?? []).map((tag) => (
-                    <span
-                        key={tag}
-                        className="rounded-full bg-white/5 px-3 py-1 text-sm text-zinc-400"
-                    >
-                        #{tag}
-                    </span>
-                ))}
+                {(snippet.tags ?? []).map((tag) => {
+                    const label = getSnippetTagLabel(tag)
+
+                    return label ? (
+                        <span
+                            key={label}
+                            className="rounded-full bg-white/5 px-3 py-1 text-sm text-zinc-400"
+                        >
+                            #{label}
+                        </span>
+                    ) : null
+                })}
             </div>
         </div>
     )

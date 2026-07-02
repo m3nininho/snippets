@@ -23,10 +23,16 @@ class TagSeeder extends Seeder
             'api',
             'frontend',
             'backend',
+            'dashboard',
+            'eloquent',
+            'inertia',
+            'hooks',
+            'utils',
+            'json',
         ];
 
         foreach ($tags as $tag) {
-            Tag::firstOrCreate([
+            Tag::updateOrCreate([
                 'slug' => $tag,
             ], [
                 'name' => ucfirst($tag),

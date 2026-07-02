@@ -17,8 +17,15 @@ import {
     getSnippetLanguageKey,
     getSnippetLanguageName,
 } from '@/Support/snippetLanguage'
+import { getSnippetTagLabel } from '@/Support/snippetTags'
 
-export default function SnippetDetailsModal({ snippet, onClose }) {
+export default function SnippetDetailsModal({
+    snippet,
+    mode = 'view',
+    onClose,
+}) {
+    const editing = mode === 'edit'
+
     return (
         <Transition show={Boolean(snippet)} as={Fragment}>
             <Dialog
@@ -72,30 +79,71 @@ export default function SnippetDetailsModal({ snippet, onClose }) {
                                         </div>
 
                                         <DialogTitle className="text-3xl font-semibold tracking-tight">
-                                            {snippet.title}
+                                            {editing ? 'Editar snippet' : snippet.title}
                                         </DialogTitle>
 
-                                        <p className="mt-4 leading-relaxed text-zinc-400">
-                                            {snippet.description}
-                                        </p>
+                                        {editing ? (
+                                            <div className="mt-6 space-y-5">
+                                                <label className="block space-y-2">
+                                                    <span className="text-sm text-zinc-500">
+                                                        Título
+                                                    </span>
+                                                    <input
+                                                        type="text"
+                                                        defaultValue={snippet.title}
+                                                        className="w-full rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none focus:border-violet-500"
+                                                    />
+                                                </label>
 
-                                        <div className="mt-6 flex flex-wrap gap-3">
-                                            {(snippet.tags ?? []).map((tag) => (
-                                                <span key={tag} className="rounded-full bg-white/5 px-3 py-1 text-sm text-zinc-400">
-                                                    #{tag}
-                                                </span>
-                                            ))}
-                                        </div>
+                                                <label className="block space-y-2">
+                                                    <span className="text-sm text-zinc-500">
+                                                        Descrição
+                                                    </span>
+                                                    <textarea
+                                                        defaultValue={snippet.description}
+                                                        rows={5}
+                                                        className="w-full resize-none rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none focus:border-violet-500"
+                                                    />
+                                                </label>
 
-                                        <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
-                                            <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-                                                Explicação
-                                            </h3>
-
-                                            <p className="mt-3 leading-relaxed text-zinc-300">
-                                                {snippet.explanation}
+                                                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-zinc-400">
+                                                    Edição visual apenas. A ação de salvar será conectada depois.
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <p className="mt-4 leading-relaxed text-zinc-400">
+                                                {snippet.description}
                                             </p>
-                                        </div>
+                                        )}
+
+                                        {!editing && (
+                                            <div className="mt-6 flex flex-wrap gap-3">
+                                                {(snippet.tags ?? []).map((tag) => {
+                                                    const label = getSnippetTagLabel(tag)
+
+                                                    return label ? (
+                                                        <span
+                                                            key={label}
+                                                            className="rounded-full bg-white/5 px-3 py-1 text-sm text-zinc-400"
+                                                        >
+                                                            #{label}
+                                                        </span>
+                                                    ) : null
+                                                })}
+                                            </div>
+                                        )}
+
+                                        {!editing && (
+                                            <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
+                                                <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
+                                                    Explicação
+                                                </h3>
+
+                                                <p className="mt-3 leading-relaxed text-zinc-300">
+                                                    {snippet.explanation}
+                                                </p>
+                                            </div>
+                                        )}
 
                                         <div className="mt-6 border-t border-white/10 pt-5">
                                             <p className="text-sm text-zinc-500">
@@ -114,7 +162,7 @@ export default function SnippetDetailsModal({ snippet, onClose }) {
                                     <section className="min-w-0 p-6">
                                         <div className="mb-4 flex items-center justify-between">
                                             <h3 className="text-xl font-semibold">
-                                                Código
+                                                {editing ? 'Código editável' : 'Código'}
                                             </h3>
 
                                             <span className="text-sm text-zinc-500">
@@ -122,10 +170,38 @@ export default function SnippetDetailsModal({ snippet, onClose }) {
                                             </span>
                                         </div>
 
-                                        <CodePreview
-                                            language={getSnippetLanguageKey(snippet)}
-                                            code={snippet.code ?? ''}
-                                        />
+                                        {editing ? (
+                                            <div className="space-y-5">
+                                                <textarea
+                                                    defaultValue={snippet.code ?? ''}
+                                                    rows={16}
+                                                    className="w-full resize-none rounded-2xl border border-white/10 bg-[#050816] p-5 font-mono text-sm text-zinc-100 outline-none focus:border-violet-500"
+                                                />
+
+                                                <div className="flex justify-end gap-3">
+                                                    <button
+                                                        type="button"
+                                                        onClick={onClose}
+                                                        className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300 transition hover:bg-white/10"
+                                                    >
+                                                        Cancelar
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={onClose}
+                                                        className="rounded-xl bg-violet-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-violet-500"
+                                                    >
+                                                        Salvar alterações
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <CodePreview
+                                                language={getSnippetLanguageKey(snippet)}
+                                                code={snippet.code ?? ''}
+                                            />
+                                        )}
                                     </section>
                                 </div>
                             )}

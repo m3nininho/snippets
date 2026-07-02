@@ -6,18 +6,24 @@ import SnippetList from '@/Components/Dashboard/SnippetList'
 import SnippetPreviewPanel from '@/Components/Dashboard/SnippetPreviewPanel'
 import SnippetSearchBar from '@/Components/Dashboard/SnippetSearchBar'
 import SnippetDetailsModal from '@/Components/SnippetDetailsModal'
+import SnippetTrashModal from '@/Components/SnippetTrashModal'
+import MySnippetsPanel from '@/Components/Snippets/MySnippetsPanel'
 import { getSnippetAuthorName } from '@/Support/snippetAuthor'
 import { getSnippetLanguageName } from '@/Support/snippetLanguage'
 
 export default function Dashboard() {
-    const {
-        snippets: {
-            data: snippets = [],
-        } = {},
-    } = usePage().props;
+    const page = usePage().props
+    const snippetPagination = page.snippets
+    const snippets = snippetPagination?.data ?? []
+    const mySnippets = page.mySnippets ?? []
+    const user = page.auth?.user
 
     const [previewSnippet, setPreviewSnippet] = useState(null);
-    const [modalSnippet, setModalSnippet] = useState(null);
+    const [detailsModal, setDetailsModal] = useState({
+        snippet: null,
+        mode: 'view',
+    })
+    const [trashSnippet, setTrashSnippet] = useState(null)
     const [filters, setFilters] = useState({
         search: '',
         language: '',
@@ -101,8 +107,60 @@ export default function Dashboard() {
         })
     }
 
+    const openSnippetDetails = (snippet) => {
+        setDetailsModal({
+            snippet,
+            mode: 'view',
+        })
+    }
+
+    const openSnippetEditor = (snippet) => {
+        setDetailsModal({
+            snippet,
+            mode: 'edit',
+        })
+    }
+
+    const openTrashConfirmation = (snippet) => {
+        closeSnippetDetails()
+        setTrashSnippet(snippet)
+    }
+
+    const closeSnippetDetails = () => {
+        setDetailsModal({
+            snippet: null,
+            mode: 'view',
+        })
+    }
+
     return (
-        <AppLayout>
+        <AppLayout
+            tabPanels={{
+                'meus-snippets': (
+                    <MySnippetsPanel
+                        snippets={mySnippets}
+                        user={user}
+                        onSnippetClick={openSnippetDetails}
+                        onEditClick={openSnippetEditor}
+                        onDeleteClick={openTrashConfirmation}
+                    />
+                ),
+            }}
+            overlays={(
+                <>
+                    <SnippetDetailsModal
+                        snippet={detailsModal.snippet}
+                        mode={detailsModal.mode}
+                        onClose={closeSnippetDetails}
+                    />
+
+                    <SnippetTrashModal
+                        snippet={trashSnippet}
+                        onClose={() => setTrashSnippet(null)}
+                    />
+                </>
+            )}
+        >
             <Head title="Dashboard" />
 
             <div className="space-y-8">
@@ -120,19 +178,15 @@ export default function Dashboard() {
                         snippets={filteredSnippets}
                         onSnippetClick={handleSnippetPreview}
                         activeSnippet={previewSnippet}
+                        pagination={snippetPagination}
                     />
 
                     <SnippetPreviewPanel
                         snippet={previewSnippet}
-                        onViewMoreClick={setModalSnippet}
+                        onViewMoreClick={openSnippetDetails}
                     />
                 </div>
             </div>
-
-            <SnippetDetailsModal
-                snippet={modalSnippet}
-                onClose={() => setModalSnippet(null)}
-            />
         </AppLayout>
     );
 }

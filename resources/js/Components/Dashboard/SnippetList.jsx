@@ -1,9 +1,11 @@
 import SnippetCard from '@/Components/SnippetCard'
+import Pagination from '@/Components/Pagination'
 
 export default function SnippetList({
                                         snippets = [],
                                         onSnippetClick,
                                         activeSnippet,
+                                        pagination,
                                     }) {
     if (snippets.length === 0) {
         return (
@@ -29,6 +31,8 @@ export default function SnippetList({
                     active={(activeSnippet?.id ?? activeSnippet?.title) === (snippet.id ?? snippet.title)}
                 />
             ))}
+
+            <Pagination pagination={pagination} />
         </div>
     )
 }

@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import UserMenu from '@/Components/AppShell/UserMenu'
 
 export default function AppLayout({
     children,
     initialTab = 'explorar',
     contentTab = initialTab,
+    tabPanels = {},
+    overlays = null,
 }) {
     const [activeTab, setActiveTab] = useState(initialTab)
 
@@ -78,9 +81,10 @@ export default function AppLayout({
     )
 
     const activeTabData = tabs.find((tab) => tab.key === activeTab)
+    const activeTabPanel = tabPanels[activeTab]
 
     return (
-        <div className="flex min-h-screen bg-[#070B14] text-white">
+        <div className="flex h-screen overflow-hidden bg-[#070B14] text-white">
             <aside className="w-72 border-r border-white/10 bg-[#0B1020]">
                 <div className="flex h-full flex-col p-6">
                     <div className="mb-10 flex items-center gap-3">
@@ -131,26 +135,15 @@ export default function AppLayout({
                         </div>
                     </div>
 
-                    <div className="mt-auto rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-violet-600 font-bold">
-                                L
-                            </div>
-
-                            <div>
-                                <p className="font-medium">test.dev</p>
-                                <p className="text-sm text-zinc-400">
-                                    @testdev
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <UserMenu />
                 </div>
             </aside>
 
-            <main className="flex-1 p-8">
+            <main className="flex-1 overflow-y-auto p-8">
                 {activeTab === contentTab ? (
                     children
+                ) : activeTabPanel ? (
+                    activeTabPanel
                 ) : (
                     <EmptyTabContent
                         title={activeCollection?.name || activeTabData?.title}
@@ -162,6 +155,8 @@ export default function AppLayout({
                     />
                 )}
             </main>
+
+            {overlays}
         </div>
     )
 }

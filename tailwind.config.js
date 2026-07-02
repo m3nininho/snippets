@@ -10,6 +10,15 @@ export default {
         './resources/js/**/*.jsx',
     ],
 
+    safelist: [
+        'bg-indigo-500',
+        'bg-yellow-500',
+        'bg-blue-500',
+        'bg-emerald-500',
+        'bg-cyan-500',
+        'bg-zinc-500',
+    ],
+
     theme: {
         extend: {
             fontFamily: {

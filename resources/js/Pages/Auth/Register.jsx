@@ -1,9 +1,6 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import InputError from '@/Components/InputError'
+import GuestLayout from '@/Layouts/GuestLayout'
+import { Head, Link, useForm } from '@inertiajs/react'
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -11,110 +8,112 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
-    });
+    })
 
-    const submit = (e) => {
-        e.preventDefault();
+    const submit = (event) => {
+        event.preventDefault()
 
         post(route('register'), {
             onFinish: () => reset('password', 'password_confirmation'),
-        });
-    };
+        })
+    }
 
     return (
-        <GuestLayout>
-            <Head title="Register" />
+        <GuestLayout
+            title="Criar conta"
+            subtitle="Comece a organizar seus snippets."
+        >
+            <Head title="Criar conta" />
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
+            <form
+                onSubmit={submit}
+                className="space-y-5"
+            >
+                <label className="block space-y-2">
+                    <span className="text-sm text-zinc-500">
+                        Nome
+                    </span>
 
-                    <TextInput
-                        id="name"
-                        name="name"
+                    <input
+                        type="text"
                         value={data.name}
-                        className="mt-1 block w-full"
                         autoComplete="name"
-                        isFocused={true}
-                        onChange={(e) => setData('name', e.target.value)}
-                        required
+                        autoFocus
+                        onChange={(event) => setData('name', event.target.value)}
+                        className="w-full rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-violet-500"
+                        placeholder="Teste Dev"
                     />
 
-                    <InputError message={errors.name} className="mt-2" />
-                </div>
+                    <InputError message={errors.name} />
+                </label>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+                <label className="block space-y-2">
+                    <span className="text-sm text-zinc-500">
+                        Email
+                    </span>
 
-                    <TextInput
-                        id="email"
+                    <input
                         type="email"
-                        name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
                         autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
+                        onChange={(event) => setData('email', event.target.value)}
+                        className="w-full rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-violet-500"
+                        placeholder="voce@email.com"
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
+                    <InputError message={errors.email} />
+                </label>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                <label className="block space-y-2">
+                    <span className="text-sm text-zinc-500">
+                        Senha
+                    </span>
 
-                    <TextInput
-                        id="password"
+                    <input
                         type="password"
-                        name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
                         autoComplete="new-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                        required
+                        onChange={(event) => setData('password', event.target.value)}
+                        className="w-full rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-violet-500"
                     />
 
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
+                    <InputError message={errors.password} />
+                </label>
 
-                <div className="mt-4">
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
+                <label className="block space-y-2">
+                    <span className="text-sm text-zinc-500">
+                        Confirmar senha
+                    </span>
 
-                    <TextInput
-                        id="password_confirmation"
+                    <input
                         type="password"
-                        name="password_confirmation"
                         value={data.password_confirmation}
-                        className="mt-1 block w-full"
                         autoComplete="new-password"
-                        onChange={(e) =>
-                            setData('password_confirmation', e.target.value)
-                        }
-                        required
+                        onChange={(event) => setData('password_confirmation', event.target.value)}
+                        className="w-full rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-violet-500"
                     />
 
-                    <InputError
-                        message={errors.password_confirmation}
-                        className="mt-2"
-                    />
-                </div>
+                    <InputError message={errors.password_confirmation} />
+                </label>
 
-                <div className="mt-4 flex items-center justify-end">
+                <button
+                    type="submit"
+                    disabled={processing}
+                    className="w-full rounded-2xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                    Criar conta
+                </button>
+
+                <p className="text-center text-sm text-zinc-500">
+                    Já tem conta?{' '}
                     <Link
                         href={route('login')}
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="text-violet-400 transition hover:text-violet-300"
                     >
-                        Already registered?
+                        Entrar
                     </Link>
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
-                    </PrimaryButton>
-                </div>
+                </p>
             </form>
         </GuestLayout>
-    );
+    )
 }
