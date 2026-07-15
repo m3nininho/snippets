@@ -24,4 +24,17 @@ class SnippetController extends Controller
     {
         return Inertia::render('Snippets/Create');
     }
+
+    public function update(Request $request, Snippet $snippet)
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'code' => ['required', 'string'],
+        ]);
+
+        $snippet->update($validated);
+
+        return back();
+    }
 }

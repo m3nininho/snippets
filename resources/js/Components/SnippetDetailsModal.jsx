@@ -1,30 +1,36 @@
-import {
-    Dialog,
-    DialogPanel,
-    DialogTitle,
-    Transition,
-    TransitionChild,
-} from '@headlessui/react'
-import { Fragment } from 'react'
+import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
+import { Fragment, useEffect } from 'react'
 import { X } from 'lucide-react'
 import CodePreview from '@/Components/CodePreview'
-import {
-    getSnippetAuthorName,
-    getSnippetAuthorProfileHref,
-} from '@/Support/snippetAuthor'
-import {
-    getSnippetLanguageColor,
-    getSnippetLanguageKey,
-    getSnippetLanguageName,
-} from '@/Support/snippetLanguage'
+import { getSnippetAuthorName, getSnippetAuthorProfileHref } from '@/Support/snippetAuthor'
+import { getSnippetLanguageColor, getSnippetLanguageKey, getSnippetLanguageName } from '@/Support/snippetLanguage'
 import { getSnippetTagLabel } from '@/Support/snippetTags'
+import { useForm } from "@inertiajs/react";
 
-export default function SnippetDetailsModal({
-    snippet,
-    mode = 'view',
-    onClose,
-}) {
+export default function SnippetDetailsModal({ snippet, mode = 'view', onClose }) {
     const editing = mode === 'edit'
+
+    const {data, setData, put} = useForm({
+        title: '',
+        description: '',
+        code: '',
+    })
+
+
+    function handleSubmit(){
+        put(`/snippets/${snippet.id}`)
+        onClose()
+    }
+
+    useEffect(() => {
+        if (snippet) {
+            setData({
+                title: snippet.title,
+                description: snippet.description,
+                code: snippet.code,
+            });
+        }
+    }, [snippet]);
 
     return (
         <Transition show={Boolean(snippet)} as={Fragment}>
@@ -82,7 +88,7 @@ export default function SnippetDetailsModal({
                                             {editing ? 'Editar snippet' : snippet.title}
                                         </DialogTitle>
 
-                                        {editing ? (
+                                        {editing && (
                                             <div className="mt-6 space-y-5">
                                                 <label className="block space-y-2">
                                                     <span className="text-sm text-zinc-500">
@@ -90,7 +96,8 @@ export default function SnippetDetailsModal({
                                                     </span>
                                                     <input
                                                         type="text"
-                                                        defaultValue={snippet.title}
+                                                        value={data.title}
+                                                        onChange={e => setData('title' , e.target.value)}
                                                         className="w-full rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none focus:border-violet-500"
                                                     />
                                                 </label>
@@ -100,7 +107,8 @@ export default function SnippetDetailsModal({
                                                         Descrição
                                                     </span>
                                                     <textarea
-                                                        defaultValue={snippet.description}
+                                                        value={data.description}
+                                                        onChange={e => setData('description' , e.target.value)}
                                                         rows={5}
                                                         className="w-full resize-none rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none focus:border-violet-500"
                                                     />
@@ -110,10 +118,6 @@ export default function SnippetDetailsModal({
                                                     Edição visual apenas. A ação de salvar será conectada depois.
                                                 </div>
                                             </div>
-                                        ) : (
-                                            <p className="mt-4 leading-relaxed text-zinc-400">
-                                                {snippet.description}
-                                            </p>
                                         )}
 
                                         {!editing && (
@@ -136,11 +140,11 @@ export default function SnippetDetailsModal({
                                         {!editing && (
                                             <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
                                                 <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-                                                    Explicação
+                                                    Descrição
                                                 </h3>
 
                                                 <p className="mt-3 leading-relaxed text-zinc-300">
-                                                    {snippet.explanation}
+                                                    {snippet.description}
                                                 </p>
                                             </div>
                                         )}
@@ -173,7 +177,8 @@ export default function SnippetDetailsModal({
                                         {editing ? (
                                             <div className="space-y-5">
                                                 <textarea
-                                                    defaultValue={snippet.code ?? ''}
+                                                    value={data.code}
+                                                    onChange={e => setData('code' , e.target.value)}
                                                     rows={16}
                                                     className="w-full resize-none rounded-2xl border border-white/10 bg-[#050816] p-5 font-mono text-sm text-zinc-100 outline-none focus:border-violet-500"
                                                 />
@@ -189,7 +194,7 @@ export default function SnippetDetailsModal({
 
                                                     <button
                                                         type="button"
-                                                        onClick={onClose}
+                                                        onClick={handleSubmit}
                                                         className="rounded-xl bg-violet-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-violet-500"
                                                     >
                                                         Salvar alterações

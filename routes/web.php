@@ -16,6 +16,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 Route::middleware('auth')->group(function () {
     Route::get('/snippets', [SnippetController::class, 'index'])->name('snippets.index');
     Route::get('/snippets/create', [SnippetController::class, 'create'])->name('snippets.create');
+    Route::put('/snippets/{snippet}', [SnippetController::class, 'update'])->name('snippets.update');
 
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 
