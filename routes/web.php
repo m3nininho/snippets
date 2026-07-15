@@ -17,6 +17,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/snippets', [SnippetController::class, 'index'])->name('snippets.index');
     Route::get('/snippets/create', [SnippetController::class, 'create'])->name('snippets.create');
     Route::put('/snippets/{snippet}', [SnippetController::class, 'update'])->name('snippets.update');
+    Route::delete('/snippets/{snippet}', [SnippetController::class, 'destroy'])->name('snippets.destroy');
 
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 

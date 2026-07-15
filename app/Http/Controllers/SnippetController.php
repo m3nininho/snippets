@@ -37,4 +37,8 @@ class SnippetController extends Controller
 
         return back();
     }
+    public function destroy(Snippet $snippet)
+    {
+        $snippet->delete();
+    }
 }

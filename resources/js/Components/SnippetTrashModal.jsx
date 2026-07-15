@@ -1,6 +1,6 @@
 import { AlertTriangle } from 'lucide-react'
 
-export default function SnippetTrashModal({ snippet, onClose }) {
+export default function SnippetTrashModal({ snippet, onClose, onConfirm }) {
     if (!snippet) {
         return null
     }
@@ -45,7 +45,7 @@ export default function SnippetTrashModal({ snippet, onClose }) {
 
                     <button
                         type="button"
-                        onClick={onClose}
+                        onClick={onConfirm}
                         className="rounded-xl bg-red-500/20 px-4 py-3 text-sm font-medium text-red-200 transition hover:bg-red-500/30"
                     >
                         Mover para lixeira

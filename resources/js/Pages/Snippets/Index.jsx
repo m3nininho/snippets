@@ -1,5 +1,5 @@
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, usePage } from '@inertiajs/react'
+import { Head, usePage, router } from '@inertiajs/react'
 import { useState } from 'react'
 import MySnippetsPanel from '@/Components/Snippets/MySnippetsPanel'
 import SnippetDetailsModal from '@/Components/SnippetDetailsModal'
@@ -42,6 +42,18 @@ export default function Index() {
         setTrashSnippet(snippet)
     }
 
+    function handleDelete() {
+        if (!trashSnippet) {
+            return;
+        }
+
+        router.delete(`/snippets/${trashSnippet.id}`, {
+            onSuccess: () => {
+                setTrashSnippet(null);
+            },
+        });
+    }
+
     return (
         <AppLayout
             overlays={(
@@ -55,6 +67,7 @@ export default function Index() {
                     <SnippetTrashModal
                         snippet={trashSnippet}
                         onClose={() => setTrashSnippet(null)}
+                        onConfirm={handleDelete}
                     />
                 </>
             )}
