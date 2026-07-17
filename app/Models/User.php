@@ -33,4 +33,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Snippet::class);
     }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function favoriteSnippets()
+    {
+        return $this->belongsToMany(Snippet::class, 'favorites')->withTimestamps();
+    }
+
 }

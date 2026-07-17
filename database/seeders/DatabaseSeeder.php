@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         ], [
             'name' => 'Teste Dev',
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => 12345,
         ]);
 
         User::updateOrCreate([
