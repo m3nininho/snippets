@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/snippets/{snippet}', [SnippetController::class, 'destroy'])->name('snippets.destroy');
 
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites/{snippet}', [FavoriteController::class, 'store'])->name('favorites.store');
 
     Route::get('/collections', [CollectionController::class, 'index'])->name('collections.index');
     Route::get('/collections/{collection}', [CollectionController::class, 'show'])->name('collections.show');

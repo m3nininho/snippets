@@ -12,6 +12,11 @@ class SnippetController extends Controller
     {
         $mySnippets = Snippet::query()
             ->with(['language', 'tags', 'user'])
+            ->withExists([
+                'favorites as is_favorited' => function ($query) use ($request) {
+                    $query->where('user_id', $request->user()->id);
+                },
+            ])
             ->where('user_id', $request->user()->id)
             ->latest();
 

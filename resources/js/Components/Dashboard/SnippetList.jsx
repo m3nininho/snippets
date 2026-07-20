@@ -1,12 +1,7 @@
 import SnippetCard from '@/Components/SnippetCard'
 import Pagination from '@/Components/Pagination'
 
-export default function SnippetList({
-                                        snippets = [],
-                                        onSnippetClick,
-                                        activeSnippet,
-                                        pagination,
-                                    }) {
+export default function SnippetList({ snippets = [], onSnippetClick, activeSnippet, pagination }) {
     if (snippets.length === 0) {
         return (
             <div className="col-span-8 rounded-3xl border border-dashed border-white/10 bg-white/5 p-12 text-center">

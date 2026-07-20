@@ -4,8 +4,21 @@ import {
     getSnippetLanguageName,
 } from '@/Support/snippetLanguage'
 import { getSnippetTagLabel } from '@/Support/snippetTags'
+import { router } from '@inertiajs/react'
 
 export default function SnippetCard({snippet, onClick = () => {}, active = false}) {
+
+    function handleFavorite() {
+        const message = snippet.is_favorited
+            ? 'Deseja remover este snippet dos favoritos?'
+            : 'Deseja adicionar este snippet aos favoritos?'
+
+        if (!window.confirm(message)) {
+            return
+        }
+
+        router.post(`/favorites/${snippet.id}`)
+    }
     return (
         <div
             role="button"
@@ -34,11 +47,26 @@ export default function SnippetCard({snippet, onClick = () => {}, active = false
 
                 <button
                     type="button"
-                    onClick={(event) => event.stopPropagation()}
-                    className="opacity-0 transition group-hover:opacity-100"
+                    onClick={(event) => {
+                        event.stopPropagation()
+                        handleFavorite()
+                    }}
+                    className={`transition ${
+                        snippet.is_favorited
+                            ? 'opacity-100'
+                            : 'opacity-0 group-hover:opacity-100'
+                    }`}
                     aria-label="Favoritar snippet"
                 >
-                    <Star size={18} />
+                    <Star
+                        size={18}
+                        fill={snippet.is_favorited ? 'currentColor' : 'none'}
+                        className={
+                            snippet.is_favorited
+                                ? 'text-yellow-400'
+                                : 'text-zinc-400'
+                        }
+                    />
                 </button>
             </div>
 
