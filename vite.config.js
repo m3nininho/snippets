@@ -19,7 +19,13 @@ export default defineConfig({
     },
 
     server: {
-        host: '127.0.0.1',
+        host: process.env.VITE_DEV_SERVER_HOST || '0.0.0.0',
         port: 5173,
+        strictPort: true,
+        hmr: {
+            host: process.env.VITE_HMR_HOST || 'localhost',
+            port: Number(process.env.VITE_HMR_PORT || 5173),
+            clientPort: Number(process.env.VITE_HMR_CLIENT_PORT || 5173),
+        },
     },
 })
