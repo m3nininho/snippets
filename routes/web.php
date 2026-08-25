@@ -16,6 +16,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 Route::middleware('auth')->group(function () {
     Route::get('/snippets', [SnippetController::class, 'index'])->name('snippets.index');
     Route::get('/snippets/create', [SnippetController::class, 'create'])->name('snippets.create');
+    Route::post('/snippets', [SnippetController::class, 'store'])->name('snippets.store');
     Route::put('/snippets/{snippet}', [SnippetController::class, 'update'])->name('snippets.update');
     Route::delete('/snippets/{snippet}', [SnippetController::class, 'destroy'])->name('snippets.destroy');
 

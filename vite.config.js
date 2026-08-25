@@ -22,6 +22,12 @@ export default defineConfig({
         host: process.env.VITE_DEV_SERVER_HOST || '0.0.0.0',
         port: 5173,
         strictPort: true,
+
+        watch: {
+            usePolling: true,
+            interval: 300,
+        },
+
         hmr: {
             host: process.env.VITE_HMR_HOST || 'localhost',
             port: Number(process.env.VITE_HMR_PORT || 5173),

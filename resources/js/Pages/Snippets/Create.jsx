@@ -1,6 +1,6 @@
 import AppLayout from '@/Layouts/AppLayout'
 import CodePreview from '@/Components/CodePreview'
-import { Head, Link } from '@inertiajs/react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import { Save } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
@@ -13,7 +13,7 @@ const languages = [
 ]
 
 export default function Create() {
-    const [form, setForm] = useState({
+     const { data, setData, post, processing, errors } = useForm({
         title: '',
         description: '',
         language: 'javascript',
@@ -23,21 +23,17 @@ export default function Create() {
     })
 
     const tags = useMemo(() => {
-        return form.tags
+        return data.tags
             .split(',')
             .map((tag) => tag.trim())
             .filter(Boolean)
-    }, [form.tags])
+    }, [data.tags])
 
-    const updateForm = (key, value) => {
-        setForm((currentForm) => ({
-            ...currentForm,
-            [key]: value,
-        }))
-    }
 
     const submit = (event) => {
-        event.preventDefault()
+        event.preventDefault();
+
+        post(route('snippets.store'))
     }
 
     return (
@@ -69,10 +65,12 @@ export default function Create() {
 
                         <button
                             type="submit"
-                            className="inline-flex items-center gap-2 rounded-2xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-500"
+                            disabled={processing}
+                            className="inline-flex items-center gap-2 rounded-2xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-500 disabled:opacity-50"
                         >
                             <Save size={18} />
-                            Salvar snippet
+
+                            {processing ? 'Salvando...' : 'Salvar snippet'}
                         </button>
                     </div>
                 </div>
@@ -87,8 +85,8 @@ export default function Create() {
 
                                 <input
                                     type="text"
-                                    value={form.title}
-                                    onChange={(event) => updateForm('title', event.target.value)}
+                                    value={data.title}
+                                    onChange={(e) => setData('title', e.target.value)}
                                     placeholder="Ex: Hook useDebounce"
                                     className="w-full rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-violet-500"
                                 />
@@ -100,8 +98,8 @@ export default function Create() {
                                 </span>
 
                                 <select
-                                    value={form.language}
-                                    onChange={(event) => updateForm('language', event.target.value)}
+                                    value={data.language}
+                                    onChange={(e) => setData('language', e.target.value)}
                                     className="w-full rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none focus:border-violet-500"
                                 >
                                     {languages.map((language) => (
@@ -122,8 +120,8 @@ export default function Create() {
                             </span>
 
                             <textarea
-                                value={form.description}
-                                onChange={(event) => updateForm('description', event.target.value)}
+                                value={data.description}
+                                onChange={(e) => setData('description', e.target.value)}
                                 rows={4}
                                 placeholder="Explique quando e por que usar esse snippet."
                                 className="w-full resize-none rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-violet-500"
@@ -137,8 +135,8 @@ export default function Create() {
                                 </span>
 
                                 <select
-                                    value={form.visibility}
-                                    onChange={(event) => updateForm('visibility', event.target.value)}
+                                    value={data.visibility}
+                                    onChange={(e) => setData('visibility', e.target.value)}
                                     className="w-full rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none focus:border-violet-500"
                                 >
                                     <option value="private">Privado</option>
@@ -153,8 +151,8 @@ export default function Create() {
 
                                 <input
                                     type="text"
-                                    value={form.tags}
-                                    onChange={(event) => updateForm('tags', event.target.value)}
+                                    value={data.tags}
+                                    onChange={(e) => setData('tags', e.target.value)}
                                     placeholder="react, hooks, frontend"
                                     className="w-full rounded-2xl border border-white/10 bg-[#070B14] px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-violet-500"
                                 />
@@ -167,8 +165,8 @@ export default function Create() {
                             </span>
 
                             <textarea
-                                value={form.code}
-                                onChange={(event) => updateForm('code', event.target.value)}
+                                value={data.code}
+                                onChange={(e) => setData('code', e.target.value)}
                                 rows={15}
                                 className="w-full resize-none rounded-2xl border border-white/10 bg-[#050816] p-5 font-mono text-sm text-zinc-100 outline-none focus:border-violet-500"
                             />
@@ -183,17 +181,17 @@ export default function Create() {
                                 </h2>
 
                                 <p className="mt-1 text-sm text-zinc-500">
-                                    {form.title || 'Novo snippet'}
+                                    {data.title || 'Novo snippet'}
                                 </p>
                             </div>
 
                             <div className="flex flex-wrap gap-3">
                                 <span className="rounded-full bg-white/5 px-3 py-1 text-sm text-zinc-400">
-                                    {languages.find((language) => language.value === form.language)?.label}
+                                    {languages.find((language) => language.value === data.language)?.label}
                                 </span>
 
                                 <span className="rounded-full bg-white/5 px-3 py-1 text-sm text-zinc-400">
-                                    {form.visibility === 'public' ? 'Público' : 'Privado'}
+                                    {data.visibility === 'public' ? 'Público' : 'Privado'}
                                 </span>
 
                                 {tags.map((tag) => (
@@ -206,15 +204,15 @@ export default function Create() {
                                 ))}
                             </div>
 
-                            {form.description && (
+                            {data.description && (
                                 <p className="leading-relaxed text-zinc-400">
-                                    {form.description}
+                                    {data.description}
                                 </p>
                             )}
 
                             <CodePreview
-                                language={form.language}
-                                code={form.code || '// seu código aparecerá aqui'}
+                                language={data.language}
+                                code={data.code || '// seu código aparecerá aqui'}
                             />
 
                             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-zinc-400">
