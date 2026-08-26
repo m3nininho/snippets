@@ -1,4 +1,5 @@
 import Sidebar from '@/Components/AppShell/Sidebar'
+import FlashMessage from '@/Components/FlashMessage'
 
 export default function AppLayout({ children, overlays = null }) {
     return (
@@ -10,6 +11,7 @@ export default function AppLayout({ children, overlays = null }) {
             </main>
 
             {overlays}
+            <FlashMessage />
         </div>
     )
 }

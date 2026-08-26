@@ -1,8 +1,9 @@
-import { Link } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import CollectionNavItem from '@/Components/AppShell/CollectionNavItem'
-import { collections } from '@/Config/navigation'
 
 export default function CollectionsNav() {
+    const collections = usePage().props.sidebarCollections ?? []
+
     return (
         <div>
             <div className="mb-4 flex items-center justify-between">
@@ -11,7 +12,7 @@ export default function CollectionsNav() {
                 </h2>
 
                 <Link
-                    href={route('collections.index')}
+                    href={route('collections.index', { create: 1 })}
                     className="text-sm text-violet-400 hover:text-violet-300"
                     aria-label="Ver coleções"
                 >
@@ -22,7 +23,7 @@ export default function CollectionsNav() {
             <div className="space-y-2">
                 {collections.map((collection) => (
                     <CollectionNavItem
-                        key={collection.slug}
+                        key={collection.id}
                         collection={collection}
                     />
                 ))}

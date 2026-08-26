@@ -24,7 +24,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/favorites/{snippet}', [FavoriteController::class, 'store'])->name('favorites.store');
 
     Route::get('/collections', [CollectionController::class, 'index'])->name('collections.index');
+    Route::post('/collections', [CollectionController::class, 'store'])->name('collections.store');
     Route::get('/collections/{collection}', [CollectionController::class, 'show'])->name('collections.show');
+    Route::patch('/collections/{collection}', [CollectionController::class, 'update'])->name('collections.update');
+    Route::delete('/collections/{collection}', [CollectionController::class, 'destroy'])->name('collections.destroy');
+    Route::post('/collections/{collection}/snippets', [CollectionController::class, 'addSnippets'])->name('collections.snippets.store');
+    Route::delete('/collections/{collection}/snippets/{snippet}', [CollectionController::class, 'removeSnippet'])->name('collections.snippets.destroy');
 
     Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
     Route::get('/trash', [TrashController::class, 'index'])->name('trash.index');

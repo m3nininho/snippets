@@ -29,6 +29,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
     public function snippets()
     {
         return $this->hasMany(Snippet::class);
@@ -44,4 +45,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Snippet::class, 'favorites')->withTimestamps();
     }
 
+    public function collections()
+    {
+        return $this->hasMany(Collection::class);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Collection;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -33,6 +34,17 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+            ],
+            'sidebarCollections' => fn () => $request->user()
+                ? Collection::query()
+                    ->where('user_id', $request->user()->id)
+                    ->withCount('snippets')
+                    ->orderBy('name')
+                    ->get(['id', 'name', 'color'])
+                : [],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
             ],
         ];
     }

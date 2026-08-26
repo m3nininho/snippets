@@ -9,12 +9,20 @@ class Snippet extends Model
 {
     use SoftDeletes;
 
+    protected static function booted(): void
+    {
+        static::deleting(function (Snippet $snippet) {
+            $snippet->collections()->detach();
+        });
+    }
+
     protected function casts(): array
     {
         return [
             'deleted_at' => 'datetime',
         ];
     }
+
     protected $fillable = [
         'user_id',
         'language_id',
@@ -38,6 +46,7 @@ class Snippet extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
+
     public function favorites()
     {
         return $this->hasMany(Favorite::class);
@@ -46,5 +55,10 @@ class Snippet extends Model
     public function favoritedBy()
     {
         return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+    }
+
+    public function collections()
+    {
+        return $this->belongsToMany(Collection::class)->withTimestamps();
     }
 }

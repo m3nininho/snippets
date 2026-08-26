@@ -1,11 +1,27 @@
 import { Transition } from '@headlessui/react';
 import { Link } from '@inertiajs/react';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const DropDownContext = createContext();
 
 const Dropdown = ({ children }) => {
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        if (!open) {
+            return;
+        }
+
+        const closeOnEscape = (event) => {
+            if (event.key === 'Escape') {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener('keydown', closeOnEscape);
+
+        return () => document.removeEventListener('keydown', closeOnEscape);
+    }, [open]);
 
     const toggleOpen = () => {
         setOpen((previousState) => !previousState);
