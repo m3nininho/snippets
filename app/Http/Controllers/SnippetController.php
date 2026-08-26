@@ -65,8 +65,8 @@ class SnippetController extends Controller
                     )->id;
             });
 
-        $snippet->tags()->sync($tagIds);
-    }
+            $snippet->tags()->sync($tagIds);
+        }
 
         return redirect()->route('snippets.index');
     }

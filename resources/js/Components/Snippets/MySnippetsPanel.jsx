@@ -5,6 +5,7 @@ import {
 } from '@/Support/snippetLanguage'
 import { getSnippetTagLabel } from '@/Support/snippetTags'
 import Pagination from '@/Components/Pagination'
+import { Link } from '@inertiajs/react'
 
 export default function MySnippetsPanel({
     snippets = [],
@@ -29,6 +30,14 @@ export default function MySnippetsPanel({
                     </p>
                 </div>
 
+                <div className='flex gap-3 items-center justify-center'>
+                    <Link
+                        href={route('snippets.create')}
+                        className="h- rounded-2xl bg-violet-600 px-5 py-3 font-medium transition hover:bg-violet-500"
+                    >
+                        Novo Snippet
+                    </Link>
+
                 <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-right">
                     <p className="text-2xl font-semibold">
                         {snippets.length}
@@ -37,6 +46,9 @@ export default function MySnippetsPanel({
                         cadastrados
                     </p>
                 </div>
+                </div>
+
+
             </div>
 
             {snippets.length === 0 ? (
