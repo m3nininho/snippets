@@ -1,11 +1,10 @@
 <?php
 
 use App\Http\Controllers\CollectionController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SnippetController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FavoriteController;
-use App\Http\Controllers\TagController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SnippetController;
 use App\Http\Controllers\TrashController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
@@ -31,7 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/collections/{collection}/snippets', [CollectionController::class, 'addSnippets'])->name('collections.snippets.store');
     Route::delete('/collections/{collection}/snippets/{snippet}', [CollectionController::class, 'removeSnippet'])->name('collections.snippets.destroy');
 
-    Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
     Route::get('/trash', [TrashController::class, 'index'])->name('trash.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

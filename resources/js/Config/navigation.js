@@ -18,10 +18,6 @@ export const sidebarItems = [
         activeRoutes: ['collections.*'],
     },
     {
-        label: 'Tags',
-        routeName: 'tags.index',
-    },
-    {
         label: 'Lixeira',
         routeName: 'trash.index',
     },
