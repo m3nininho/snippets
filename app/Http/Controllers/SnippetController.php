@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Language;
-use App\Models\Tag;
 use App\Models\Snippet;
+use App\Models\Tag;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class SnippetController extends Controller
 {
@@ -32,6 +33,7 @@ class SnippetController extends Controller
     {
         return Inertia::render('Snippets/Create');
     }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -46,15 +48,15 @@ class SnippetController extends Controller
         $language = Language::where('slug', $validated['language'])->firstOrFail();
 
         $snippet = Snippet::create([
-                'user_id' => $request->user()->id,
-                'language_id' => $language->id,
-                'title' => $validated['title'],
-                'description' => $validated['description'],
-                'code' => $validated['code'],
-                'visibility' => $validated['visibility'],
-            ]);
+            'user_id' => $request->user()->id,
+            'language_id' => $language->id,
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'code' => $validated['code'],
+            'visibility' => $validated['visibility'],
+        ]);
 
-        if (!empty($validated['tags'])) {
+        if (! empty($validated['tags'])) {
             $tagIds = collect(explode(',', $validated['tags']))
                 ->map(fn ($tag) => trim($tag))
                 ->filter()
@@ -63,7 +65,7 @@ class SnippetController extends Controller
                         ['slug' => Str::slug($tag)],
                         ['name' => $tag]
                     )->id;
-            });
+                });
 
             $snippet->tags()->sync($tagIds);
         }
@@ -73,6 +75,8 @@ class SnippetController extends Controller
 
     public function update(Request $request, Snippet $snippet)
     {
+        Gate::authorize('update', $snippet);
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -83,8 +87,11 @@ class SnippetController extends Controller
 
         return back();
     }
+
     public function destroy(Snippet $snippet)
     {
+        Gate::authorize('delete', $snippet);
+
         $snippet->delete();
     }
 }

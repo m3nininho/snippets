@@ -11,7 +11,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $snippets = Snippet::query()
-            ->with(['language', 'tags', 'user'])
+            ->with(['language', 'tags', 'user:id,name'])
             ->withExists([
                 'favorites as is_favorited' => function ($query) use ($request) {
                     $query->where('user_id', $request->user()->id);

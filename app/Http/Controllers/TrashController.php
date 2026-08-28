@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Snippet;
-use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class TrashController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $snippets = Snippet::onlyTrashed()
-            ->with(['language', 'tags', 'user'])
+            ->with(['language', 'tags', 'user:id,name'])
+            ->where('user_id', $request->user()->id)
             ->latest('deleted_at')
             ->get();
 
